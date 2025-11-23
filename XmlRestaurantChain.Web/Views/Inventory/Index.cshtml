@@ -1,0 +1,96 @@
+@model XmlRestaurantChain.Web.Models.InventoryPageViewModel
+@{
+    ViewData["Title"] = "Tồn kho";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Inventory</p>
+            <h1>Quản lý tồn kho & NCC</h1>
+            <p class="muted">Nghiệp vụ: nhập nguyên liệu, cảnh báo mức tồn; XML snapshot gửi về trung tâm.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/inventory/export/xml">Xuất XML</a>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Thêm NCC</p>
+                    <h3>Nhà cung cấp</h3>
+                </div>
+            </div>
+            <form asp-action="CreateSupplier" method="post" class="form-grid compact">
+                <input asp-for="NewSupplier.Name" placeholder="Tên NCC" />
+                <input asp-for="NewSupplier.ContactPhone" placeholder="Điện thoại" />
+                <input asp-for="NewSupplier.ContactEmail" placeholder="Email" />
+                <input asp-for="NewSupplier.Address" placeholder="Địa chỉ" />
+                <button class="btn btn-ghost" type="submit">Lưu NCC</button>
+            </form>
+            <div class="pill-group">
+                @foreach (var s in Model.Suppliers)
+                {
+                    <span class="pill">@s.Name</span>
+                }
+            </div>
+        </div>
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Nhập tồn kho</p>
+                    <h3>Nguyên liệu</h3>
+                </div>
+            </div>
+            <form asp-action="CreateItem" method="post" class="form-grid compact">
+                <input asp-for="NewItem.Name" placeholder="Tên nguyên liệu" />
+                <input asp-for="NewItem.Unit" placeholder="Đơn vị" />
+                <input asp-for="NewItem.Quantity" type="number" step="0.1" placeholder="Số lượng" />
+                <input asp-for="NewItem.ReorderLevel" type="number" step="0.1" placeholder="Cảnh báo" />
+                <select asp-for="NewItem.RestaurantId">
+                    @foreach (var r in Model.Restaurants)
+                    {
+                        <option value="@r.Id">@r.Name</option>
+                    }
+                </select>
+                <select asp-for="NewItem.SupplierId">
+                    <option value="">Chọn NCC</option>
+                    @foreach (var s in Model.Suppliers)
+                    {
+                        <option value="@s.Id">@s.Name</option>
+                    }
+                </select>
+                <textarea asp-for="NewItem.Notes" placeholder="Ghi chú"></textarea>
+                <button class="btn btn-primary full" type="submit">Lưu tồn kho</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-panel">
+        <div class="panel-head">
+            <div>
+                <p class="label">Danh sách tồn kho</p>
+                <h3>Hiện tại</h3>
+            </div>
+        </div>
+        <div class="list scrollable">
+            @foreach (var i in Model.Items)
+            {
+                var alert = i.Quantity <= i.ReorderLevel;
+                <div class="list-row">
+                    <div>
+                        <strong>@i.Name</strong>
+                        <p class="muted small">@i.Restaurant.Name · @i.Quantity @i.Unit (cảnh báo @i.ReorderLevel)</p>
+                        <p class="muted small">NCC: @i.Supplier?.Name</p>
+                    </div>
+                    <span class="pill @(alert ? "alert" : "")">@(alert ? "Thiếu" : "OK")</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

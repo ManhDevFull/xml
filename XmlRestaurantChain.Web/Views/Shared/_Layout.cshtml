@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · CNX Chain</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/XmlRestaurantChain.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">CNX</span>
+                <span class="brand-text">XML Restaurant Chain</span>
+            </a>
+        </div>
+        <nav class="app-nav">
+            <a asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+            <a asp-controller="Reservations" asp-action="Index">Đặt bàn</a>
+            <a asp-controller="Orders" asp-action="Index">Order</a>
+            <a asp-controller="Menu" asp-action="Index">Menu</a>
+            <a asp-controller="Inventory" asp-action="Index">Tồn kho</a>
+            <a asp-controller="Restaurants" asp-action="Index">Nhà hàng</a>
+            <a asp-controller="Loyalty" asp-action="Index">Loyalty</a>
+            <a asp-controller="Staff" asp-action="Index">Nhân sự</a>
+            <a asp-controller="Xml" asp-action="Index">XML Tools</a>
+            <a asp-controller="Home" asp-action="Privacy">Thông tin</a>
+        </nav>
+        <div class="auth">
+            <partial name="_LoginPartial" />
+        </div>
+    </header>
+
+    <div class="page">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="app-footer">
+        <div>
+            <strong>CNX Chain</strong> · Đồ án Công nghệ XML · PostgreSQL · Docker
+        </div>
+        <a asp-controller="Home" asp-action="Privacy">Liên hệ &amp; chính sách</a>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

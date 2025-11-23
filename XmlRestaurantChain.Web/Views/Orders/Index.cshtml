@@ -1,0 +1,99 @@
+@model XmlRestaurantChain.Web.Models.OrdersPageViewModel
+@{
+    ViewData["Title"] = "Order";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Orders</p>
+            <h1>Quản lý order</h1>
+            <p class="muted">Nghiệp vụ: tạo order từ bàn/đặt bàn, tính tổng, xuất XML gửi bếp/POS.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/orders/export/xml">Xuất XML</a>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Tạo order</p>
+                    <h3>Chọn món & bàn</h3>
+                </div>
+            </div>
+            <form asp-action="Create" method="post" class="form-grid">
+                <select asp-for="NewOrder.RestaurantId">
+                    @foreach (var r in Model.Restaurants)
+                    {
+                        <option value="@r.Id">@r.Name</option>
+                    }
+                </select>
+                <select asp-for="NewOrder.DiningTableId">
+                    <option value="">Chọn bàn</option>
+                    @foreach (var t in Model.Tables)
+                    {
+                        <option value="@t.Id">@t.Name (@t.Restaurant.Name)</option>
+                    }
+                </select>
+                <select asp-for="NewOrder.ReservationId">
+                    <option value="">Gắn đặt bàn</option>
+                    @foreach (var res in Model.Reservations)
+                    {
+                        <option value="@res.Id">@res.CustomerName - @res.ReservedAt.ToLocalTime():HH:mm</option>
+                    }
+                </select>
+                <select asp-for="NewOrder.Type">
+                    @foreach (var t in Enum.GetValues<XmlRestaurantChain.Web.Models.OrderType>())
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+                <select asp-for="NewOrder.SelectedMenuItemIds" multiple size="8">
+                    @foreach (var m in Model.MenuItems)
+                    {
+                        <option value="@m.Id">@m.Name (@string.Format("{0:N0} đ", m.Price))</option>
+                    }
+                </select>
+                <textarea asp-for="NewOrder.Notes" placeholder="Ghi chú"></textarea>
+                <button class="btn btn-primary full" type="submit">Tạo order</button>
+            </form>
+            <p class="muted small">XML export giúp đồng bộ order xuống bếp hoặc hệ thống giao vận.</p>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Order gần nhất</p>
+                    <h3>50 record mới</h3>
+                </div>
+            </div>
+            <div class="list scrollable">
+                @foreach (var o in Model.Orders)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>#@o.Id · @o.Restaurant.Name</strong>
+                            <p class="muted small">@o.Type · @o.CreatedAt.ToLocalTime():HH:mm · Tổng @string.Format("{0:N0} đ", o.Total)</p>
+                            <p class="muted small">Món: @string.Join(", ", o.Items.Select(i => i.MenuItem.Name))</p>
+                        </div>
+                        <form asp-action="UpdateStatus" method="post" class="inline-form">
+                            <input type="hidden" name="id" value="@o.Id" />
+                            <select name="status">
+                                @foreach (var s in Enum.GetValues<XmlRestaurantChain.Web.Models.OrderStatus>())
+                                {
+                                    <option value="@s" selected="@(s == o.Status ? "selected" : null)">@s</option>
+                                }
+                            </select>
+                            <button class="btn btn-ghost" type="submit">Lưu</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

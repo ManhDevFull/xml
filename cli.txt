@@ -1,0 +1,15 @@
+Build & chạy container:
+1) docker build -t cnx-xml-web -f XmlRestaurantChain.Web/Dockerfile .
+2) docker run --rm -p 8080:8080 -e "ConnectionStrings__DefaultConnection=Host=ntmanh-ntmanh.k.aivencloud.com;Port=24879;Database=xml_db;Username=avnadmin;Password=AVNS_CBFDLB39drWxbArsOm8;SSL Mode=Require;Trust Server Certificate=true;" cnx-xml-web
+
+Hoặc dùng docker-compose:
+docker-compose up --build
+
+Chạy local:
+dotnet ef database update --project XmlRestaurantChain.Web --startup-project XmlRestaurantChain.Web
+dotnet run --project XmlRestaurantChain.Web
+
+Tài khoản seed:
+Admin: admin@xmlchain.local / Admin!2345
+Manager: manager@xmlchain.local / Manager!2345
+Staff: staff@xmlchain.local / Staff!2345

@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: XmlRestaurantChain.Web/Dockerfile
+    container_name: cnx-xml-web
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Host=ntmanh-ntmanh.k.aivencloud.com;Port=24879;Database=xml_db;Username=avnadmin;Password=AVNS_CBFDLB39drWxbArsOm8;SSL Mode=Require;Trust Server Certificate=true;"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "CNX Restaurant Chain";
+    var restaurants = ViewBag.Restaurants as List<XmlRestaurantChain.Web.Models.Restaurant> ?? new();
+    var menu = ViewBag.FeaturedMenu as List<XmlRestaurantChain.Web.Models.MenuItem> ?? new();
+}
+
+<section class="hero">
+    <div class="hero__content">
+        <p class="eyebrow">Luxury Dining · XML Course Project</p>
+        <h1>Quản lý chuỗi nhà hàng CNX</h1>
+        <p class="lead">Từ đặt bàn, order, kho, nhân sự đến loyalty – tất cả trong một không gian sang trọng, sáng, hiện đại.</p>
+        <div class="hero__cta">
+            <a class="btn btn-primary btn-lg" asp-controller="Management" asp-action="Dashboard">Đi tới bảng điều khiển</a>
+            <a class="btn btn-outline-light btn-lg" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+        </div>
+        <div class="hero__stats">
+            <div><span>@restaurants.Count</span>Nhà hàng</div>
+            <div><span>@menu.Count</span>Món nổi bật</div>
+            <div><span>Admin/Manager/Staff</span>Phân quyền</div>
+        </div>
+    </div>
+    <div class="hero__glass">
+        <div class="glass-card">
+            <p class="label">Đặt bàn</p>
+            <h3>Realtime</h3>
+            <p class="muted">Theo dõi trạng thái bàn, lịch khách, ghi chú VIP.</p>
+        </div>
+        <div class="glass-card">
+            <p class="label">Order &amp; Menu</p>
+            <h3>Menu điện tử</h3>
+            <p class="muted">Gán món, tính tiền tự động, phân ca phục vụ.</p>
+        </div>
+        <div class="glass-card">
+            <p class="label">Kho &amp; NCC</p>
+            <h3>Tồn kho an toàn</h3>
+            <p class="muted">Cảnh báo hết hàng, liên kết nhà cung cấp.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cards-grid">
+    <div class="card-tile">
+        <p class="label">Chuỗi nhà hàng</p>
+        <h3>Danh sách cơ sở</h3>
+        <div class="pill-group">
+            @foreach (var r in restaurants)
+            {
+                <span class="pill" style="--pill-color:@r.ThemeColor">@r.Name - @r.City</span>
+            }
+        </div>
+    </div>
+    <div class="card-tile">
+        <p class="label">Menu signature</p>
+        <h3>Món được yêu thích</h3>
+        <div class="menu-grid">
+            @foreach (var item in menu)
+            {
+                <div class="menu-card">
+                    <div>
+                        <p class="muted small">@item.MenuCategory?.Name</p>
+                        <h4>@item.Name</h4>
+                    </div>
+                    <strong>@string.Format("{0:N0} đ", item.Price)</strong>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="card-tile highlight">
+        <p class="label">Bảo mật &amp; phân quyền</p>
+        <h3>Admin · Manager · Staff</h3>
+        <ul class="checklist">
+            <li>Quản lý dữ liệu tập trung (PostgreSQL - xml_db)</li>
+            <li>Tài khoản seed: admin/manager/staff kèm mật khẩu mặc định</li>
+            <li>Quyền hạn tách biệt cho nghiệp vụ</li>
+        </ul>
+        <a class="link" asp-area="Identity" asp-page="/Account/Register">Tạo thêm tài khoản →</a>
+    </div>
+</section>

@@ -1,0 +1,112 @@
+@model XmlRestaurantChain.Web.Models.MenuPageViewModel
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Menu</p>
+            <h1>Quản lý danh mục & món</h1>
+            <p class="muted">Nghiệp vụ: thêm danh mục, món ăn; xuất/import XML để đồng bộ POS/kiosk.</p>
+        </div>
+        <div class="pill-group">
+            <a class="btn btn-outline-light" href="/menu/export/xml">Xuất XML</a>
+        </div>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Danh mục</p>
+                    <h3>Tạo category</h3>
+                </div>
+            </div>
+            <form asp-action="CreateCategory" method="post" class="form-inline">
+                <input asp-for="NewCategory.Name" placeholder="Tên danh mục" />
+                <input asp-for="NewCategory.Description" placeholder="Mô tả" />
+                <select asp-for="NewCategory.RestaurantId">
+                    @foreach (var r in Model.Restaurants)
+                    {
+                        <option value="@r.Id">@r.Name</option>
+                    }
+                </select>
+                <button class="btn btn-ghost" type="submit">Thêm</button>
+            </form>
+            <div class="list scrollable">
+                @foreach (var c in Model.Categories)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>@c.Name</strong>
+                            <p class="muted small">@c.Restaurant.Name</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Món ăn</p>
+                    <h3>Thêm món</h3>
+                </div>
+            </div>
+            <form asp-action="CreateItem" method="post" class="form-grid">
+                <input asp-for="NewMenuItem.Name" placeholder="Tên món" />
+                <input asp-for="NewMenuItem.Price" type="number" step="1000" placeholder="Giá" />
+                <textarea asp-for="NewMenuItem.Description" placeholder="Mô tả"></textarea>
+                <select asp-for="NewMenuItem.MenuCategoryId">
+                    @foreach (var c in Model.Categories)
+                    {
+                        <option value="@c.Id">@c.Name (@c.Restaurant.Name)</option>
+                    }
+                </select>
+                <select asp-for="NewMenuItem.IsAvailable">
+                    <option value="true">Đang bán</option>
+                    <option value="false">Dừng</option>
+                </select>
+                <button class="btn btn-primary full" type="submit">Thêm món</button>
+            </form>
+            <div class="list scrollable">
+                @foreach (var i in Model.Items)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>@i.Name</strong>
+                            <p class="muted small">@i.MenuCategory?.Name · @string.Format("{0:N0} đ", i.Price)</p>
+                        </div>
+                        <span class="pill @(i.IsAvailable ? "" : "pill-soft")">@((i.IsAvailable) ? "Bán" : "Dừng")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card-panel">
+        <div class="panel-head">
+            <div>
+                <p class="label">Import XML</p>
+                <h3>Đẩy menu từ file XML</h3>
+            </div>
+        </div>
+        <p class="muted small">Định dạng: &lt;MenuImport RestaurantId="1"&gt;&lt;Category Name="...">&lt;Item Name="..." Price="120000"&gt;&lt;Description&gt;...&lt;/Description&gt;&lt;/Item&gt;&lt;/Category&gt;&lt;/MenuImport&gt;</p>
+        <form asp-action="Import" method="post" enctype="multipart/form-data" class="form-inline">
+            <select name="RestaurantId">
+                @foreach (var r in Model.Restaurants)
+                {
+                    <option value="@r.Id">@r.Name</option>
+                }
+            </select>
+            <input type="file" name="file" accept=".xml" required />
+            <button class="btn btn-primary" type="submit">Import XML</button>
+        </form>
+    </div>
+</div>

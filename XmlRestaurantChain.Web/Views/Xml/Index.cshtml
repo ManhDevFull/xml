@@ -1,0 +1,56 @@
+@model List<XmlRestaurantChain.Web.Models.Restaurant>
+@{
+    ViewData["Title"] = "XML Tools";
+}
+
+<div class="page-section">
+    <p class="eyebrow">XML · Import/Export</p>
+    <h1>Công cụ XML cho chuỗi nhà hàng</h1>
+    <p class="muted">Xuất dữ liệu menu, đặt bàn, tồn kho ra XML; import menu mới vào DB PostgreSQL.</p>
+
+    <div class="cards-grid">
+        <div class="card-tile">
+            <h3>Xuất XML</h3>
+            <div class="list">
+                <div class="list-row">
+                    <div>
+                        <strong>Menu</strong>
+                        <p class="muted small">Categories + Items</p>
+                    </div>
+                    <a class="btn btn-primary" href="/xml/export/menu">Tải xuống</a>
+                </div>
+                <div class="list-row">
+                    <div>
+                        <strong>Đặt bàn</strong>
+                        <p class="muted small">100 đặt bàn gần nhất</p>
+                    </div>
+                    <a class="btn btn-primary" href="/xml/export/reservations">Tải xuống</a>
+                </div>
+                <div class="list-row">
+                    <div>
+                        <strong>Tồn kho</strong>
+                        <p class="muted small">Snapshot tồn kho + NCC</p>
+                    </div>
+                    <a class="btn btn-primary" href="/xml/export/inventory">Tải xuống</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-tile">
+            <h3>Import menu từ XML</h3>
+            <p class="muted small">Định dạng: &lt;MenuImport RestaurantId="1"&gt;&lt;Category Name="..."&gt;&lt;Item Name="..." Price="100000"&gt;&lt;Description&gt;...&lt;/Description&gt;&lt;/Item&gt;...&lt;/Category&gt;...&lt;/MenuImport&gt;</p>
+            <form asp-action="ImportMenu" method="post" enctype="multipart/form-data" class="form-grid">
+                <label class="muted small">Chọn nhà hàng mục tiêu</label>
+                <select name="restaurantId" required>
+                    @foreach (var r in Model)
+                    {
+                        <option value="@r.Id">@r.Name (@r.City)</option>
+                    }
+                </select>
+                <input type="file" name="file" accept=".xml" required />
+                <button class="btn btn-primary full" type="submit">Import XML</button>
+            </form>
+            <p class="muted small">Nếu file XML có RestaurantId khác, hệ thống sẽ dùng giá trị bạn chọn ở dropdown.</p>
+        </div>
+    </div>
+</div>

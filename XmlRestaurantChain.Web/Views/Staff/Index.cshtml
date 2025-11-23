@@ -1,0 +1,38 @@
+@model XmlRestaurantChain.Web.Models.StaffPageViewModel
+@{
+    ViewData["Title"] = "Nhân sự";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Staff</p>
+            <h1>Nhân sự & phân quyền</h1>
+            <p class="muted">Nghiệp vụ: xem danh sách nhân sự, role; xuất XML báo cáo nhân sự.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/staff/export/xml">Xuất XML</a>
+    </div>
+
+    <div class="card-panel">
+        <div class="panel-head">
+            <div>
+                <p class="label">Nhân sự hiện có</p>
+                <h3>Gắn user & role</h3>
+            </div>
+        </div>
+        <div class="list">
+            @foreach (var s in Model.Staff)
+            {
+                <div class="list-row">
+                    <div>
+                        <strong>@s.User.DisplayName</strong>
+                        <p class="muted small">@s.Position · @s.Restaurant.Name</p>
+                        <p class="muted small">@s.User.Email</p>
+                    </div>
+                    <span class="pill pill-soft">@s.HiredDate.ToLocalTime():dd/MM/yyyy</span>
+                </div>
+            }
+        </div>
+        <p class="muted small">Tạo user qua /Identity/Account/Register, sau đó gán role trong DB hoặc seeding.</p>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Identity
+@using XmlRestaurantChain.Web.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="auth-links">
+@if (SignInManager.IsSignedIn(User))
+{
+    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name</a>
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <button type="submit" class="btn btn-ghost">Đăng xuất</button>
+    </form>
+}
+else
+{
+    <a asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+}
+</div>

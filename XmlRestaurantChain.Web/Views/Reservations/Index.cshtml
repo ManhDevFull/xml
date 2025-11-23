@@ -1,0 +1,88 @@
+@model XmlRestaurantChain.Web.Models.ReservationsPageViewModel
+@{
+    ViewData["Title"] = "Đặt bàn";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Reservations</p>
+            <h1>Quản lý đặt bàn</h1>
+            <p class="muted">Nghiệp vụ: nhận đặt bàn, chọn nhà hàng/bàn, trạng thái, export XML feed.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/reservations/export/xml">Xuất XML</a>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Tạo đặt bàn</p>
+                    <h3>Nhập thông tin khách</h3>
+                </div>
+            </div>
+            <form asp-action="Create" method="post" class="form-grid">
+                <input asp-for="NewReservation.CustomerName" placeholder="Tên khách" required />
+                <input asp-for="NewReservation.CustomerPhone" placeholder="Số điện thoại" required />
+                <input asp-for="NewReservation.PartySize" type="number" min="1" />
+                <input asp-for="NewReservation.ReservedAt" type="datetime-local" />
+                <textarea asp-for="NewReservation.Notes" placeholder="Ghi chú"></textarea>
+                <select asp-for="NewReservation.RestaurantId">
+                    @foreach (var r in Model.Restaurants)
+                    {
+                        <option value="@r.Id">@r.Name</option>
+                    }
+                </select>
+                <select asp-for="NewReservation.DiningTableId">
+                    @foreach (var t in Model.Tables)
+                    {
+                        <option value="@t.Id">@t.Name (@t.Restaurant.Name)</option>
+                    }
+                </select>
+                <select asp-for="NewReservation.Status">
+                    @foreach (var s in Enum.GetValues<XmlRestaurantChain.Web.Models.ReservationStatus>())
+                    {
+                        <option value="@s">@s</option>
+                    }
+                </select>
+                <button class="btn btn-primary full" type="submit">Lưu đặt bàn</button>
+            </form>
+            <p class="muted small">XML dùng trong nghiệp vụ: export feed để đồng bộ với kiosk, ứng dụng mobile.</p>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Đặt bàn gần nhất</p>
+                    <h3>50 record mới</h3>
+                </div>
+            </div>
+            <div class="list scrollable">
+                @foreach (var r in Model.Reservations)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>@r.CustomerName (@r.PartySize)</strong>
+                            <p class="muted small">@r.Restaurant.Name · @r.DiningTable.Name · @r.ReservedAt.ToLocalTime():dd/MM HH:mm</p>
+                        </div>
+                        <form asp-action="UpdateStatus" method="post" class="inline-form">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <select name="status">
+                                @foreach (var s in Enum.GetValues<XmlRestaurantChain.Web.Models.ReservationStatus>())
+                                {
+                                    <option value="@s" selected="@(s == r.Status ? "selected" : null)">@s</option>
+                                }
+                            </select>
+                            <button class="btn btn-ghost" type="submit">Lưu</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

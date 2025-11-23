@@ -1,0 +1,64 @@
+@model XmlRestaurantChain.Web.Models.RestaurantsPageViewModel
+@{
+    ViewData["Title"] = "Nhà hàng";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Restaurants</p>
+            <h1>Chuỗi nhà hàng</h1>
+            <p class="muted">Nghiệp vụ: thêm chi nhánh, xem bàn/danh mục liên quan; XML xuất danh sách cơ sở.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/restaurants/export/xml">Xuất XML</a>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Tạo nhà hàng</p>
+                    <h3>Thêm chi nhánh</h3>
+                </div>
+            </div>
+            <form asp-action="Create" method="post" class="form-grid">
+                <input asp-for="NewRestaurant.Name" placeholder="Tên nhà hàng" />
+                <input asp-for="NewRestaurant.City" placeholder="Thành phố" />
+                <input asp-for="NewRestaurant.Country" placeholder="Quốc gia" />
+                <input asp-for="NewRestaurant.Address" placeholder="Địa chỉ" />
+                <input asp-for="NewRestaurant.Phone" placeholder="Điện thoại" />
+                <input asp-for="NewRestaurant.Email" placeholder="Email" />
+                <input asp-for="NewRestaurant.ThemeColor" placeholder="Màu chủ đạo" />
+                <textarea asp-for="NewRestaurant.Description" placeholder="Mô tả"></textarea>
+                <button class="btn btn-primary full" type="submit">Thêm nhà hàng</button>
+            </form>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Danh sách nhà hàng</p>
+                    <h3>Hiện tại</h3>
+                </div>
+            </div>
+            <div class="list scrollable">
+                @foreach (var r in Model.Restaurants)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>@r.Name</strong>
+                            <p class="muted small">@r.Address · @r.City</p>
+                            <p class="muted small">Bàn: @r.Tables.Count · Danh mục: @r.Categories.Count</p>
+                        </div>
+                        <span class="pill" style="--pill-color:@r.ThemeColor">@r.ThemeColor</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

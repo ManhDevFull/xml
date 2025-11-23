@@ -1,0 +1,65 @@
+@model XmlRestaurantChain.Web.Models.LoyaltyPageViewModel
+@{
+    ViewData["Title"] = "Loyalty";
+}
+
+<div class="page-section">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Loyalty</p>
+            <h1>Khách hàng thân thiết</h1>
+            <p class="muted">Nghiệp vụ: lưu thông tin, điểm, hạng; xuất XML cho CRM.</p>
+        </div>
+        <a class="btn btn-outline-light" href="/loyalty/export/xml">Xuất XML</a>
+    </div>
+
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="toast toast-success">@toast</div>
+    }
+
+    <div class="grid-2">
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Thêm khách</p>
+                    <h3>Loyalty member</h3>
+                </div>
+            </div>
+            <form asp-action="Create" method="post" class="form-grid">
+                <input asp-for="NewMember.CustomerName" placeholder="Tên khách" />
+                <input asp-for="NewMember.Phone" placeholder="SĐT" />
+                <input asp-for="NewMember.Email" placeholder="Email" />
+                <input asp-for="NewMember.Points" type="number" placeholder="Điểm" />
+                <input asp-for="NewMember.Tier" placeholder="Hạng" />
+                <select asp-for="NewMember.RestaurantId">
+                    @foreach (var r in Model.Restaurants)
+                    {
+                        <option value="@r.Id">@r.Name</option>
+                    }
+                </select>
+                <button class="btn btn-primary" type="submit">Lưu</button>
+            </form>
+        </div>
+        <div class="card-panel">
+            <div class="panel-head">
+                <div>
+                    <p class="label">Danh sách</p>
+                    <h3>Khách thân thiết</h3>
+                </div>
+            </div>
+            <div class="list scrollable">
+                @foreach (var l in Model.Members)
+                {
+                    <div class="list-row">
+                        <div>
+                            <strong>@l.CustomerName</strong>
+                            <p class="muted small">@l.Phone · @l.Restaurant.Name</p>
+                        </div>
+                        <span class="pill">@l.Tier (@l.Points)</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
