@@ -265,3 +265,4 @@ D:\CNX\xml\XmlRestaurantChain.Web\obj\Debug\net9.0\XmlRestaurantChain.Web.pdb
 D:\CNX\xml\XmlRestaurantChain.Web\obj\Debug\net9.0\XmlRestaurantChain.Web.genruntimeconfig.cache
 D:\CNX\xml\XmlRestaurantChain.Web\obj\Debug\net9.0\ref\XmlRestaurantChain.Web.dll
 D:\CNX\xml\XmlRestaurantChain.Web\obj\Debug\net9.0\compressed\3uvnox5t2l-88w7sxenrk.gz
+D:\CNX\xml\XmlRestaurantChain.Web\obj\Debug\net9.0\XmlRestaurantChain.Web.sourcelink.json

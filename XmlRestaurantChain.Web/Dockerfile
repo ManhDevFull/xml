@@ -1,7 +1,6 @@
 # Build and run ASP.NET Core MVC app with PostgreSQL connection string injected via env.
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
